@@ -90,4 +90,62 @@ router.get("/api/v1/topRated", async (req, res) => {
   }
 });
 
+// router.get("/getdata", async (req, res) => {
+//   try {
+//     const filters = { ...req.query };
+//     // sort limit, page excluded
+
+//     const excludeFiedls = ["sort", "page", "limit"];
+//     excludeFiedls.forEach((field) => delete filters[field]);
+
+//     let queries = {};
+//     if (req.query.sort) {
+//       const sortby = req.query.sort.split(",").join(" ");
+//       queries.sortby = sortby;
+//     }
+//     console.log(queries.sortby);
+//     const result = await Product.find({}, { name: 1, price: 1 }).sort(
+//       queries.sortby
+//     );
+//     res.send(result);
+//   } catch (err) {
+//     res.json({
+//       message: err.message,
+//     });
+//   }
+// });
+router.get("/allData", async (req, res) => {
+  try {
+    const page = parseInt(req.query.page);
+    const limit = parseInt(req.query.limit);
+
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+    const result = {};
+
+    if (endIndex < (await Product.find({})).length) {
+      result.next = {
+        page: page + 1,
+        limit,
+      };
+    }
+    if (startIndex > 0) {
+      result.previous = {
+        page: page - 1,
+        limit,
+      };
+    }
+
+    result.results = await Product.find({})
+      .limit(limit)
+      .skip(startIndex)
+      .exec();
+    res.send(result);
+  } catch (err) {
+    res.json({
+      message: err.message,
+    });
+  }
+});
+
 module.exports = router;

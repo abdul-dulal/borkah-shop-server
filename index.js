@@ -10,6 +10,7 @@ const port = process.env.PORT || 3000;
 const productRoute = require("./Router/ProductRoute");
 const userRoute = require("./Router/UserRoute");
 const cartRoute = require("./Router/CartRoute");
+const blogRoute = require("./Router/BlogRouter");
 // mongoose connect
 mongoose
   .connect(
@@ -25,6 +26,7 @@ mongoose
 app.use("/product", productRoute);
 app.use("/user", userRoute);
 app.use("/cart", cartRoute);
+app.use("/blog", blogRoute);
 
 app.get("/", (req, res) => {
   res.send("hello from borkhaShop");
