@@ -148,4 +148,51 @@ router.get("/allData", async (req, res) => {
   }
 });
 
+router.get("/pagination", async (req, res) => {
+  const page = req.query.page;
+  const limit = req.query.limit;
+
+  try {
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+    const result = {};
+    if (endIndex < (await Product.find({})).length) {
+      result.next = {
+        page: page + 1,
+        limit,
+      };
+    }
+
+    if (startIndex > 0) {
+      result.previous = {
+        page: page - 1,
+        limit,
+      };
+    }
+    result.results = await Product.find({})
+      .limit(limit)
+      .skip(startIndex)
+      .exec();
+    res.send(result);
+  } catch (err) {
+    res.json({
+      message: err.message,
+    });
+  }
+});
+router.get("/rangeProduct", async (req, res) => {
+  const min = req.query.lowest;
+  const max = req.query.highest;
+  try {
+    const result = await Product.find({
+      $and: [{ price: { $gte: min } }, { price: { $lte: max } }],
+    });
+    res.send(result);
+  } catch (err) {
+    res.json({
+      message: err.message,
+    });
+  }
+});
+
 module.exports = router;

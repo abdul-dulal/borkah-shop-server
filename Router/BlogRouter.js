@@ -58,15 +58,23 @@ router.get("/singleblog/:id", async (req, res) => {
   }
 });
 
-router.get("/getDatabyAuthor", async (req, res) => {
+router.get("/getAllBlog", async (req, res) => {
   try {
-    const data = req.query;
-    const authorData = await Blog.find({ data });
-    res.send(authorData);
+    const blog = await Blog.find({});
+    res.send(blog);
   } catch (err) {
     res.json({
       message: err.message,
     });
+  }
+});
+router.get("/getcategory", async (req, res) => {
+  try {
+    const query = req.query.category;
+    const result = await Blog.find({ category: query });
+    res.send(result);
+  } catch (err) {
+    res.json({ message: err.message });
   }
 });
 module.exports = router;

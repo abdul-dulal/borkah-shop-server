@@ -19,6 +19,10 @@ const blogSchema = Schema(
       type: Array,
       required: true,
     },
+    category: {
+      type: Array,
+      required: true,
+    },
   },
   { timestamps: true }
 );
