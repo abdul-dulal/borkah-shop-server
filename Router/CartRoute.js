@@ -24,5 +24,15 @@ router.get("/getAllItem", async (req, res) => {
     });
   }
 });
+router.delete("/delete-cartItem/:id", async (req, res) => {
+  try {
+    const remove = await cartItem.findByIdAndDelete({ _id: req.params.id });
+    res.send(remove);
+  } catch (err) {
+    res.json({
+      message: err.message,
+    });
+  }
+});
 
 module.exports = router;

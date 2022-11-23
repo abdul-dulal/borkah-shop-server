@@ -77,4 +77,5 @@ router.get("/getcategory", async (req, res) => {
     res.json({ message: err.message });
   }
 });
+
 module.exports = router;

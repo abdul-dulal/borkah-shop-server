@@ -151,6 +151,8 @@ router.get("/allData", async (req, res) => {
 router.get("/pagination", async (req, res) => {
   const page = req.query.page;
   const limit = req.query.limit;
+  const min = req.query.lowest;
+  const max = req.query.highest;
 
   try {
     const startIndex = (page - 1) * limit;
@@ -169,7 +171,9 @@ router.get("/pagination", async (req, res) => {
         limit,
       };
     }
-    result.results = await Product.find({})
+    result.results = await Product.find({
+      $and: [{ price: { $gte: min } }, { price: { $lte: max } }],
+    })
       .limit(limit)
       .skip(startIndex)
       .exec();
@@ -180,18 +184,36 @@ router.get("/pagination", async (req, res) => {
     });
   }
 });
-router.get("/rangeProduct", async (req, res) => {
-  const min = req.query.lowest;
-  const max = req.query.highest;
+router.get("/search", async (req, res) => {
+  const page = req.query.page;
+  const limit = req.query.limit;
+  console.log(req.query.name);
+  var regxp = new RegExp(req.query.name, "i");
   try {
-    const result = await Product.find({
-      $and: [{ price: { $gte: min } }, { price: { $lte: max } }],
-    });
-    res.send(result);
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+    const itemResult = {};
+    if (endIndex < (await Product.find({})).length) {
+      itemResult.next = {
+        page: page + 1,
+        limit,
+      };
+    }
+
+    if (startIndex > 0) {
+      itemResult.previous = {
+        page: page - 1,
+        limit,
+      };
+    }
+
+    itemResult.results = await Product.find({ name: regxp })
+      .limit(limit)
+      .skip(startIndex)
+      .exec();
+    res.send(itemResult);
   } catch (err) {
-    res.json({
-      message: err.message,
-    });
+    message: err.message;
   }
 });
 
