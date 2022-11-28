@@ -46,4 +46,17 @@ router.get("/get-cartItems", async (req, res) => {
   }
 });
 
+router.delete("/deleteAllItems", async (req, res) => {
+  const ids = req.body.ids;
+
+  try {
+    const product = await cartItem.deleteMany({ _id: ids });
+    res.send(product);
+  } catch (err) {
+    res.json({
+      message: err.message,
+    });
+  }
+});
+
 module.exports = router;
