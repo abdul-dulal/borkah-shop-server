@@ -35,4 +35,15 @@ router.delete("/delete-cartItem/:id", async (req, res) => {
   }
 });
 
+router.get("/get-cartItems", async (req, res) => {
+  try {
+    const cartProduct = await cartItem.find({ user: req.query.user });
+    res.send(cartProduct);
+  } catch (err) {
+    res.json({
+      message: err.message,
+    });
+  }
+});
+
 module.exports = router;

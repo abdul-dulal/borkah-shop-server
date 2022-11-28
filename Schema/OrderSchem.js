@@ -1,8 +1,9 @@
 const mongoose = require("mongoose");
+
 const { Schema } = mongoose;
 
-const cartSchema = Schema({
-  name: {
+const orderSchema = Schema({
+  user: {
     type: String,
     required: true,
   },
@@ -10,14 +11,15 @@ const cartSchema = Schema({
     type: Number,
     required: true,
   },
-  img: {
-    type: Array,
-    required: true,
+  paid: {
+    type: Boolean,
   },
-  user: {
+  transactionId: {
     type: String,
-    required: true,
+  },
+  item: {
+    type: String,
   },
 });
 
-module.exports = cartSchema;
+module.exports = orderSchema;
