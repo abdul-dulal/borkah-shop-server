@@ -24,4 +24,24 @@ router.get("/orderItem", async (req, res) => {
   }
 });
 
+router.get("/billingDetails", async (req, res) => {
+  try {
+    const billing = await Checkout.find({ user: req.query.user });
+    res.send(billing);
+  } catch (err) {
+    res.json({
+      message: err.message,
+    });
+  }
+});
+
+router.put("/updatebillingDetails/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const reuslt = await Checkout.updateOne({ _id: id }, { $set: req.body });
+    res.send(reuslt);
+  } catch (error) {}
+});
+
 module.exports = router;

@@ -18,6 +18,10 @@ const cartSchema = Schema({
     type: String,
     required: true,
   },
+  quantity: {
+    type: Number,
+    required: true,
+  },
 });
 
 module.exports = cartSchema;

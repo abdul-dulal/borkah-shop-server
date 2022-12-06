@@ -3,31 +3,21 @@ const mongoose = require("mongoose");
 const cartSchema = require("../Schema/Cartschema");
 const cartItem = mongoose.model("cart", cartSchema);
 router.post("/cartItem", async (req, res) => {
-  const item = new cartItem(req.body);
+  const cart = req.body;
   try {
-    await item.save();
-    res.send("Success");
-  } catch (err) {
-    res.json({
-      message: err.message,
-    });
-  }
-});
+    const query = {
+      name: cart.name,
+      user: cart.user,
+    };
+    const exist = await cartItem.findOne(query);
 
-router.get("/getAllItem", async (req, res) => {
-  try {
-    const items = await cartItem.find();
-    res.send(items);
-  } catch (err) {
-    res.json({
-      message: err.message,
-    });
-  }
-});
-router.delete("/delete-cartItem/:id", async (req, res) => {
-  try {
-    const remove = await cartItem.findByIdAndDelete({ _id: req.params.id });
-    res.send(remove);
+    if (exist) {
+      return res.send({ success: false });
+    } else {
+      const item = new cartItem(req.body);
+      await item.save();
+      res.send({ success: true });
+    }
   } catch (err) {
     res.json({
       message: err.message,
@@ -38,7 +28,30 @@ router.delete("/delete-cartItem/:id", async (req, res) => {
 router.get("/get-cartItems", async (req, res) => {
   try {
     const cartProduct = await cartItem.find({ user: req.query.user });
-    res.send(cartProduct);
+    res.send(cartProduct.reverse());
+  } catch (err) {
+    res.json({
+      message: err.message,
+    });
+  }
+});
+
+router.put("/updateQuantity/:name", async (req, res) => {
+  const name = req.params.name;
+  try {
+    const result = await cartItem.updateOne({ name }, { $set: req.body });
+    res.send(result);
+  } catch (err) {
+    res.json({
+      message: err.message,
+    });
+  }
+});
+
+router.delete("/delete-cartItem/:id", async (req, res) => {
+  try {
+    const remove = await cartItem.findByIdAndDelete({ _id: req.params.id });
+    res.send(remove);
   } catch (err) {
     res.json({
       message: err.message,

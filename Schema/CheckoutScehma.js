@@ -20,7 +20,7 @@ const chekcoutSchema = Schema({
   },
   address: {
     type: String,
-    required: [true, "state address is rerquired"],
+    required: [true, " address is rerquired"],
   },
   state: {
     type: String,
