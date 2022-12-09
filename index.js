@@ -54,6 +54,15 @@ app.get("/", (req, res) => {
   res.send("hello from borkhaShop");
 });
 
+const errorHandeler = (err, req, res, next) => {
+  if (res.headersSent) {
+    return next(err);
+  }
+  res.status(500).json({
+    error: err,
+  });
+};
+
 app.listen(port, () => {
   console.log("listenig port 3000");
 });

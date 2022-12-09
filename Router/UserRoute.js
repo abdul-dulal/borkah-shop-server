@@ -6,13 +6,21 @@ const bcrypt = require("bcrypt");
 var jwt = require("jsonwebtoken");
 router.post("/signup", async (req, res) => {
   const hasedPassword = await bcrypt.hash(req.body.password, 10);
+
   try {
+    const existUser = await User.findOne({ email: req.body.email });
+
     const user = new User({
       email: req.body.email,
       password: hasedPassword,
     });
-    user.save();
-    res.send("success");
+
+    if (existUser) {
+      res.send({ success: false });
+    } else {
+      user.save();
+      res.send({ success: true });
+    }
   } catch (err) {
     res.json({
       message: err.message,
@@ -40,6 +48,7 @@ router.post("/login", async (req, res) => {
             expiresIn: "1h",
           }
         );
+        console.log(token);
 
         res.send(token);
       } else {
