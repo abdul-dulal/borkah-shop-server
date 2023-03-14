@@ -11,6 +11,7 @@ const port = process.env.PORT || 3000;
 const productRoute = require("./Router/ProductRoute");
 const userRoute = require("./Router/UserRoute");
 const cartRoute = require("./Router/CartRoute");
+const wishlistRoute = require("./Router/WishlistRoute");
 const blogRoute = require("./Router/BlogRouter");
 const checkoutRoute = require("./Router/CheckoutRouter");
 const orderRoute = require("./Router/OrderRouter");
@@ -46,12 +47,13 @@ app.post("/create-payment-intent", async (req, res) => {
 app.use("/product", productRoute);
 app.use("/user", userRoute);
 app.use("/cart", cartRoute);
+app.use("/wishlist", wishlistRoute);
 app.use("/blog", blogRoute);
 app.use("/checkout", checkoutRoute);
 app.use("/order", orderRoute);
 
 app.get("/", (req, res) => {
-  res.send("hello from borkhaShop");
+  res.send("hello  borkhaShop");
 });
 
 const errorHandeler = (err, req, res, next) => {

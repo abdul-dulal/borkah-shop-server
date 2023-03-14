@@ -36,8 +36,9 @@ router.get("/api/v1/getbyCategory", async (req, res) => {
   }
 });
 
-router.get("/api/v1/getbyId/:id", async (req, res) => {
+router.get("/getbyId/:id", async (req, res) => {
   const id = req.params.id;
+
   try {
     const productbyId = await Product.findById(id);
     res.send(productbyId);
@@ -214,6 +215,21 @@ router.get("/search", async (req, res) => {
     res.send(itemResult);
   } catch (err) {
     message: err.message;
+  }
+});
+
+router.put("/updateQunatity/:id", async (req, res) => {
+  try {
+    const update = await Product.findByIdAndUpdate(
+      {
+        _id: req.params.id,
+      },
+      { $set: req.body }
+    );
+    console.log(update);
+    res.send(update);
+  } catch (error) {
+    res.send(error.message);
   }
 });
 

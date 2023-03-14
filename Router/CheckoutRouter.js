@@ -4,12 +4,18 @@ const checkoutSchema = require("../Schema/CheckoutScehma");
 const Checkout = mongoose.model("checkout", checkoutSchema);
 
 router.post("/saveAddress", async (req, res) => {
+  console.log(req.body);
   try {
     const address = new Checkout(req.body);
     await address.save();
     res.send("success");
   } catch (err) {
-    res.json({ message: err.message });
+    res.send({
+      state: "state is required",
+      city: "city is required",
+      country: "country is required",
+      address: "address is required",
+    });
   }
 });
 

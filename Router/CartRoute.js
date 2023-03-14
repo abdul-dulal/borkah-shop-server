@@ -59,11 +59,24 @@ router.delete("/delete-cartItem/:id", async (req, res) => {
   }
 });
 
-router.delete("/deleteAllItems", async (req, res) => {
-  const ids = req.body.ids;
-
+router.put("/updateQunatity/:id", async (req, res) => {
   try {
-    const product = await cartItem.deleteMany({ _id: ids });
+    const update = await cartItem.findByIdAndUpdate(
+      {
+        _id: req.params.id,
+      },
+      { $set: req.body }
+    );
+    res.send(update);
+  } catch (error) {
+    res.send(error.message);
+  }
+});
+
+router.delete("/deleteAllItems", async (req, res) => {
+  console.log(req.body.ids);
+  try {
+    const product = await cartItem.deleteMany({ _id: req.body.ids });
     res.send(product);
   } catch (err) {
     res.json({
